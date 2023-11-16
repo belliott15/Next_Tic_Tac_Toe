@@ -5,11 +5,9 @@ import Tracker from "./Tracker.jsx";
 
 const Board = () => {
   //state to track win/loss/scratch
-  const [stats, setStats] = useState({
-    xWin: 0,
-    oWin: 0,
-    scratch: 0,
-  });
+  const [xWin, setXWin] = useState(0);
+  const [oWin, setOWin] = useState(0);
+  const [scratch, setScratch] = useState(0);
   //set square state to create board
   const [squares, setSquares] = useState(Array(9).fill(null));
   //state to track current player
@@ -29,7 +27,6 @@ const Board = () => {
       }
       return val;
     });
-    console.log(newData, "new Data");
     //update state with new square data
     setSquares(newData);
     //change player to opposite player
@@ -81,11 +78,14 @@ const Board = () => {
     const w = checkWinner(squares);
     if (w) {
       setActive(w);
-      setStats();
+      if (w === "X") setXWin(xWin + 1);
+      if (w === "O") setOWin(oWin + 1);
     }
     //if no winner and all squares have values set state to 'Scratch
     if (!w && !squares.filter((square) => !square).length) {
       setActive("Scratch");
+
+      setScratch(scratch + 1);
     }
   }, [squares]);
 
@@ -120,7 +120,7 @@ const Board = () => {
           Reset
         </button>
       </footer>
-      <Tracker {...stats} />
+      <Tracker xWin={xWin} oWin={oWin} scratch={scratch} />
     </section>
   );
 };
